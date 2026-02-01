@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>福字音乐</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #d32f2f, #f44336);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Microsoft YaHei', sans-serif;
+            text-align: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 90%;
+            width: 500px;
+        }
+        
+        .fu-character {
+            font-size: 120px;
+            color: #d32f2f;
+            text-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+            margin: 0;
+            line-height: 1;
+        }
+        
+        .message {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0 30px 0;
+        }
+        
+        .music-player {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        audio {
+            width: 100%;
+            height: 50px;
+        }
+        
+        .instructions {
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="fu-character">福</h1>
+        <p class="message">触碰福字，喜迎新春 🎵</p>
+        
+        <div class="music-player">
+            <audio id="musicPlayer" controls autoplay>
+                <!-- 替换下面的链接为你的音乐链接 -->
+                <source src="https://github.com/candyworm125/music-zhufu/raw/refs/heads/main/danyanpi-cut.MP3" type="audio/mpeg">
+                您的浏览器不支持音频播放
+            </audio>
+        </div>
+        
+        <div class="instructions">
+            <p>🎯 将福字挂件送给亲友</p>
+            <p>📱 用手机触碰即可播放祝福音乐</p>
+            <p>🎁 新年礼物，心意满满</p>
+        </div>
+    </div>
+
+    <script>
+        // 自动播放音乐
+        document.addEventListener('DOMContentLoaded', function() {
+            const player = document.getElementById('musicPlayer');
+            
+            // 尝试自动播放
+            player.play().catch(e => {
+                console.log("自动播放被阻止，需要用户交互");
+            });
+            
+            // 记录播放次数（可选）
+            const playCount = localStorage.getItem('fu_play_count') || 0;
+            localStorage.setItem('fu_play_count', parseInt(playCount) + 1);
+            
+            // 添加播放特效
+            player.addEventListener('play', function() {
+                createFireworks();
+            });
+        });
+        
+        // 创建烟花效果
+        function createFireworks() {
+            const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff'];
+            
+            for(let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.style.cssText = `
+                        position: fixed;
+                        width: 10px;
+                        height: 10px;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        border-radius: 50%;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        animation: explode 1s forwards;
+                        pointer-events: none;
+                        z-index: 1000;
+                    `;
+                    
+                    document.body.appendChild(firework);
+                    
+                    // 动画结束后移除
+                    setTimeout(() => firework.remove(), 1000);
+                }, i * 50);
+            }
+        }
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes explode {
+                0% { transform: scale(1); opacity: 1; }
+                100% { transform: scale(3); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
